@@ -1,1 +1,1 @@
-All the tasks and homeworks i have completed while studying in Software University.
+This repository contains all the tasks i have completed while studying in SoftUni.
