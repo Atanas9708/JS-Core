@@ -6,6 +6,7 @@ function attachEvents() {
     const username = 'pesho';
     const password = 'p';
     const authHeaders = {'Authorization': 'Basic ' + btoa(username + ':' + password)};
+    const titleBody = $('#post-title');
     const postBody = $('#post-body');
     const commentBody = $('#post-comments');
     const selected = $('#posts');
@@ -43,13 +44,12 @@ function attachEvents() {
 
         function displayPostsAndComments([posts, comments]) {
             postBody.text(posts.body);
-            $('#post-title').text(posts.title);
+            titleBody.text(posts.title);
             commentBody.empty();
 
             for (let comment of comments) {
                 let liElem = $('<li>').text(comment.text);
                 commentBody.append(liElem);
-                console.log(comment);
             }
         }
     }
