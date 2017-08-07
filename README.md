@@ -1,1 +1,1 @@
-This repository contains all the tasks i have completed while studying in SoftUni.
+This repository contains all the tasks i have completed while studying in SoftUni. - https://softuni.bg/
