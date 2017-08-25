@@ -10,7 +10,7 @@ $(() => {
             $('#allCats').append(catTemplate(cat));
         }
         $('.btn-primary').click(showHideStatus);
-        
+
         function showHideStatus() {
             if ($(this).text() === 'Show status code'){
                 $(this).text('Hide status code');
