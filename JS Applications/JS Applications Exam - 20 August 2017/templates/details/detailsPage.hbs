@@ -1,0 +1,16 @@
+{{> header}}
+
+<main class="content">
+    {{> menu}}
+    <section id="viewComments">
+    {{> details}}
+    {{> postComment}}
+        {{#each comments}}
+            {{> comment}}
+        {{else}}
+            <p>No comments yet.</p>
+        {{/each}}
+    </section>
+</main>
+
+{{> footer}}

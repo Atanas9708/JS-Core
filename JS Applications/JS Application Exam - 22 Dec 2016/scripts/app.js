@@ -213,7 +213,7 @@ function startApp() {
                                 $('button').click(function () {
                                     let productId = $(this).attr('data-id');
                                     discardProduct(productId);
-                                })
+                                });
                             });
                     })
 

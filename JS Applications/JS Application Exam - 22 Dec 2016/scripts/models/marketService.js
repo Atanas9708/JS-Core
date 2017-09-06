@@ -25,4 +25,4 @@ let marketService = (() => {
         updateUser,
         getProduct,
     }
-})();
+})()
