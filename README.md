@@ -1,1 +1,1 @@
-This repository contains all the tasks i have completed while studying in SoftUni. - https://softuni.bg/
+JavaScript Core - May 2017, SoftUni - https://softuni.bg/
