@@ -1,25 +1,45 @@
 function solve(input) {
+    let specialKey = input[0];
 
-    let specialKey = input.shift();
+    let pattern = `(\\s|^)(${specialKey}\\s+)([!%$#A-Z]{8,})(\\s|\\.|,|$)`;
+    let regex = new RegExp(pattern, 'gi');
 
-    let specialKeyChars = '';
-    for(let char of specialKey){
-        specialKeyChars += `[${char.toUpperCase()}${char.toLowerCase()}]`;
-    }
+    for (let i = 1; i < input.length; i ++){
+        let currentWord = input[i];
 
-    let specialKeyRegex = new RegExp("(^| )(" + specialKeyChars + ")(\\s+)([A-Z!%\\$#]{8,})( |,|\\.|$)", "g");
+        let match;
+        while (match = regex.exec(currentWord)){
 
-    for (let line of input ){
+            let encodedWord = match[3];
 
-        let match = specialKeyRegex.exec(line);
-        while(match){
-            let decodedMatch = match[4].toLowerCase().replace(/!/g, '1').replace(/%/g, '2').replace(/#/g, '3').replace(/\$/g, '4');
-            let decoded = match[4].replace(match[4], decodedMatch);
-            line = line.replace(match[0], match[1] + match[2] + match[3] + decoded + match[5]);
-            match = specialKeyRegex.exec(line);
+            if (encodedWord !== encodedWord.toUpperCase()){
+                continue;
+            }
+
+            let decodedWord = decodeWord(encodedWord);
+            let decodedMessage = match[1] + match[2] + decodedWord + match[4];
+            currentWord = currentWord.replace(match[0], decodedMessage);
         }
 
-        console.log(line);
+        console.log(currentWord);
+    }
+
+    function decodeWord(encodedWord) {
+        while(encodedWord.indexOf('!') !== -1){
+            encodedWord = encodedWord.replace('!', 1);
+        }
+        while(encodedWord.indexOf('%') !== -1){
+            encodedWord = encodedWord.replace('%', 2);
+        }
+        while(encodedWord.indexOf('#') !== -1){
+            encodedWord = encodedWord.replace('#', 3);
+        }
+        while(encodedWord.indexOf('$') !== -1){
+            encodedWord = encodedWord.replace('$', 4);
+        }
+
+        return encodedWord.toLowerCase();
+
     }
 }
 
@@ -28,4 +48,4 @@ solve([
     'In this text the specialKey HELLOWORLD! is correct, but',
     'the following specialKey $HelloWorl#d and spEcIaLKEy HOLLOWORLD1 are not, while',
     'SpeCIaLkeY   SOM%%ETH$IN and SPECIALKEY ##$$##$$ are!'
-])
+]);

@@ -1,41 +1,64 @@
 function solve(input) {
-    let persons = new Set();
+
     let subscribers = new Map();
     let subscribedTo = new Map();
 
-    for(let line of input){
-        let tokens = line.split("-");
-        if(tokens.length == 1){
-            if(!persons.has(tokens[0])) {
-                persons.add(tokens[0]);
-                subscribedTo.set(tokens[0], []);
-                subscribers.set(tokens[0], []);
+    for (let line of input){
+        if (line.length === 1){
+            if (subscribers.has(line)){
+                continue;
             }
+
+            subscribers.set(line, []);
         } else {
-            let subscriber = tokens[0];
-            let subscribee = tokens[1];
+            let [firstPerson, secondPerson] = line.split('-');
 
-            if(persons.has(subscriber) && persons.has(subscribee) && subscribee != subscriber){
-                if(!subscribers.get(subscribee).some(s => s == subscriber)){
-                    subscribers.get(subscribee).push(subscriber);
-                }
-
-                if(!subscribedTo.get(subscriber).some(s => s==subscribee)){
-                    subscribedTo.get(subscriber).push(subscribee);
-                }
+            if (!subscribers.has(firstPerson) || !subscribers.has(secondPerson)){
+                continue;
             }
+
+            if (subscribers.get(firstPerson).indexOf(firstPerson) !== - 1 || firstPerson === secondPerson){
+                continue;
+            }
+
+            if (!subscribedTo.has(firstPerson)){
+                subscribedTo.set(firstPerson, 0);
+            }
+
+            let currentSubs = subscribedTo.get(firstPerson);
+            subscribers.get(secondPerson).push(firstPerson);
+            subscribedTo.set(firstPerson, currentSubs + 1);
         }
     }
 
-    let sorted = Array.from(persons).sort((a, b) => subscribers.get(b).length - subscribers.get(a).length || subscribedTo.get(b).length - subscribedTo.get(a).length);
+    let sortedSubscribers = Array.from(subscribers).sort(sortSubscribers)[0];
+    console.log(sortedSubscribers[0]);
+    for (let i = 0; i < sortedSubscribers[1].length; i++){
+        console.log(`${i + 1}. ${sortedSubscribers[1][i]}`)
+    }
 
-    let first = sorted[0];
 
-    console.log(first);
-    for(let i=0; i<subscribers.get(first).length; i++){
-        console.log(`${i+1}. ${subscribers.get(first)[i]}`);
+    function sortSubscribers(a, b) {
+        let sortCriteria = b[1].length - a[1].length;
+        if (sortCriteria !== 0){
+            return sortCriteria;
+        } else {
+            sortCriteria = subscribedTo.get(b[0]) - subscribedTo.get(a[0]);
+            return sortCriteria;
+        }
     }
 }
+
+solve([
+    'A',
+    'B',
+    'C',
+    'D',
+    'A-B',
+    'B-A',
+    'C-A',
+    'D-A'
+]);
 
 solve([
     'J',

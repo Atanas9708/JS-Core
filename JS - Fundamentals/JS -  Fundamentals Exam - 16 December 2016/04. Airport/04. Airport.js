@@ -1,70 +1,88 @@
-function airport(input) {
+function solve(input) {
 
-  let landed = [];
-  let towns = {}
+    let airport = new Map();
+    let statistics = new Map();
+    let planes = new Map();
 
-  for (let row of input){
+    for (let line of input){
+        let [planeId, town, passengers, action] = line.split(' ');
 
-      let [id, town, passengers, action] = row.split(' ');
-      passengers = Number(passengers);
+        if (action === 'land'){
+            if (airport.has(planeId)){
+                continue;
+            } else {
+                airport.set(planeId, 'land');
+            }
 
-      if(action === 'depart'){
-          if(landed.includes(id)){
-              if(!towns.hasOwnProperty(town)){
-                  towns[town] = {
+            if (!statistics.has(town)){
+                statistics.set(town, [0, 0]);
+            }
 
-                      arrivals: 0,
-                      departures: 0,
-                      planes: new Set()
-                  };
-              }
+            if (!planes.has(town)){
+                planes.set(town, new Set());
+            }
 
-              towns[town].departures += passengers;
-              landed.splice(landed.indexOf(id), 1);
-              towns[town].planes.add(id);
-          }
-      } else {
-          if(!landed.includes(id)){
-              if(!towns.hasOwnProperty(town)){
-                  towns[town] = {
-                      arrivals: 0,
-                      departures: 0,
-                      planes: new Set()
-                  };
-              }
-              towns[town].arrivals += passengers;
-              landed.push(id);
-              towns[town].planes.add(id);
-          }
-      }
-  }
+            statistics.get(town)[0] += Number(passengers);
+            planes.get(town).add(planeId);
+        } else {
+            if (airport.has(planeId)){
+                airport.delete(planeId);
+            } else {
+                continue;
+            }
 
-  landed = landed.sort((a, b) => a.localeCompare(b)).map(p => `- ${p}`);
-    console.log('Planes left:');
-    landed.forEach(p => console.log(p));
+            if (!statistics.has(town)){
+                statistics.set(town, [0, 0]);
+            }
 
-    function sort(a, b) {
-        return towns[b].arrivals - towns[a].arrivals || a.localeCompare(b);
+            if (!planes.has(town)){
+                planes.set(town, new Set());
+            }
+
+            statistics.get(town)[1] += Number(passengers);
+            planes.get(town).add(planeId);
+        }
     }
 
-    let townSortedKeys = Object.keys(towns).sort((a, b) => sort(a, b));
+    let sortedAirport = Array.from(airport).sort((a, b) => a[0].localeCompare(b[0]));
+    console.log('Planes left:');
+    for (let [plane, action] of sortedAirport){
+        console.log(`- ${plane}`);
+    }
 
-    for (let town of townSortedKeys){
+    let sortedTowns = Array.from(statistics.entries()).sort(sortTowns);
 
-        let planes = Array.from(towns[town].planes).sort((a, b) => a.localeCompare(b)).map(p => `-- ${p}`);
-
-        console.log(town);
-        console.log(`Arrivals: ${towns[town].arrivals}`);
-        console.log(`Departures: ${towns[town].departures}`);
+    for (let [town, passengers] of sortedTowns){
+        console.log(`${town}`);
+        console.log(`Arrivals: ${passengers[0]}`);
+        console.log(`Departures: ${passengers[1]}`);
+        let sortedPlanes = Array.from(planes.get(town).values()).sort((a, b) => a.localeCompare(b));
         console.log('Planes:');
-        planes.forEach(p => console.log(p));
+        for (let town of sortedPlanes){
+            console.log(`-- ${town}`)
+        }
+    }
+
+    function sortTowns(a, b) {
+        let aArrivals = a[1][0];
+        let bArrivals = b[1][0];
+
+        let firstCriteria = bArrivals - aArrivals;
+
+        if (firstCriteria !== 0){
+            return firstCriteria;
+        } else {
+            return a[0].localeCompare(b[0]);
+        }
     }
 }
 
-airport([
-    "Boeing474 Madrid 300 land",
-    "AirForceOne WashingtonDC 178 land",
-    "Airbus London 265 depart",
-    "ATR72 WashingtonDC 272 land",
-    "ATR72 Madrid 135 depart"
-])
+solve(
+    [
+        "Boeing474 Madrid 300 land",
+        "AirForceOne WashingtonDC 178 land",
+        "Airbus London 265 depart",
+        "ATR72 WashingtonDC 272 land",
+        "ATR72 Madrid 135 depart"
+    ]
+);

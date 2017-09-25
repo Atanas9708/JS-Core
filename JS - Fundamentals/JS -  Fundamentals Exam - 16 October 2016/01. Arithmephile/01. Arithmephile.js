@@ -1,22 +1,23 @@
-function solve(numbers) {
+function solve(input) {
+    input = input.map(Number);
 
-    numbers = numbers.map(Number);
-    let max = -Infinity;
+    let biggestNumber = -Infinity;
 
-    while (numbers.length > 0){
+    for (let i = 0; i < input.length; i++){
+        let number = input[i];
+        if (number > 0 && number < 10){
+            let currentProduct = 1;
+            for (let j = i + 1; j <= i + number; j++){
+                currentProduct *= input[j];
+            }
 
-        let count = numbers.shift();
-        if (count >= 10 || count < 0) continue;
-        let n = 1;
-        for (let i = 0; i < count; i++){
-            n *= numbers[i];
-        }
-        if (n > max){
-            max = n;
+            if (currentProduct > biggestNumber){
+                biggestNumber = currentProduct;
+            }
         }
     }
 
-    console.log(max);
+    console.log(biggestNumber);
 }
 
 solve([
@@ -29,4 +30,4 @@ solve([
     '56',
     '20',
     '24'
-])
+]);
