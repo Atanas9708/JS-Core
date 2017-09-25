@@ -1,35 +1,34 @@
 function solve(input) {
+    let matrix = input.map(m => m.split(''));
+    let checkMatrix = input.map(m => m.toLowerCase().split(''));
 
-    let arr = [];
-    let result = [];
+    for (let row = 0; row < input.length - 2 ; row++){
+        for (let col = 0; col < input[row].length - 2; col++){
+            let currentChar = checkMatrix[row][col];
 
-    for (let row of input){
-        arr.push(row.toLowerCase());
-        result.push(Array.from(row));
-    }
+            if (checkMatrix[row][col + 2] === currentChar
+                && checkMatrix[row + 1][col + 1] === currentChar
+                && checkMatrix[row + 2][col] === currentChar
+                && checkMatrix[row + 2][col + 2] === currentChar){
 
-    for (let i = 0; i < arr.length - 2; i ++){
-        for (let j = 0; j <arr[i].length; j++){
-            if (arr[i][j+2] != undefined && arr[i+1][j+1] != undefined && arr[i+2][j] != undefined && arr[i+2][j+2] != undefined){
-                if (arr[i][j] == arr[i][j +2] && arr[i][j] == arr[i + 1][j+1] && arr[i][j] == arr[i + 2][j] && arr[i][j] == arr[i + 2][j+2]) {
-                    result[i][j] = result[i][j + 2] = result[i + 1][j + 1] = result[i + 2][j] = result[i + 2][j + 2] = " ";
-                }
+                matrix[row][col] = '';
+                matrix[row][col + 2] = '';
+                matrix[row + 1][col + 1] = '';
+                matrix[row + 2][col] = '';
+                matrix[row + 2][col + 2] = '';
             }
         }
     }
 
-    for (let i = 0; i < result.length; i++){
-        result[i] = result[i].filter(ch => ch != ' ');
-    }
-
-    for (let line of result){
+    for (let line of matrix){
         console.log(line.join(''));
     }
 }
+
 solve([
     'abnbjs',
     'xoBab',
     'Abmbh',
     'aabab',
     'ababvvvv'
-])
+]);

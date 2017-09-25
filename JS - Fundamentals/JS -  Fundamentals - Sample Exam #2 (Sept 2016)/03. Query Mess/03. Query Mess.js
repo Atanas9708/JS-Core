@@ -1,46 +1,39 @@
 function solve(input) {
-    for(let line of input){
-        let outputObj = {};
 
-        let tokens = line.split(/[&\?]+/);
-        for(let token of tokens){
-            if(token.indexOf("=") != -1){
-                let subToken = token.split("=");
-                let key = subToken[0];
-                let value = subToken[1];
+    for (let line of input){
+        let result = new Map();
 
-                key = key.replace(/^\++/g, "").replace(/\++$/g, "").replace(/^(%20)+/g, "").replace(/(%20)+$/g, "");
-                value = value.replace(/^\++/g, "").replace(/\++$/g, "").replace(/^(%20)+/g, "").replace(/(%20)+$/g, "");
+        line = line.replace(/(\+|%20)+/g, ' ');
 
-                if(! outputObj.hasOwnProperty(key)){
-                    outputObj[key] = [];
-                }
-                outputObj[key].push(value);
+        let pattern = '([^&?]+?)=([^&?]+?)(?=&|$)';
+        let regex = new RegExp(pattern, 'g');
+        let match = regex.exec(line);
+
+        while (match){
+            let key = match[1].trim();
+            let value = match[2].trim();
+
+            if (!result.has(key)){
+                result.set(key, []);
             }
+
+            result.get(key).push(value);
+
+            match = regex.exec(line);
         }
 
-        for(let i of Array.from(Object.keys(outputObj))){
-            let plusRegex = /\++/g;
-            let anotherSpaceRegex = /(%20)+/g;
-            let multispaceRegex = /\s+/g;
-
-            if(plusRegex.exec(i) || anotherSpaceRegex.exec(i) || multispaceRegex.exec(i)) {
-                let newVal = i.replace(/\++/g, " ").replace(/(%20)+/g, " ").replace(/\s+/g, " ");
-                outputObj[newVal] = outputObj[i];
-                delete  outputObj[i];
-            }
+        let output = '';
+        for (let [key, value] of result){
+            output += `${key}=[${value.join(', ')}]`;
         }
 
-        for(let key of Object.keys(outputObj)){
-            for(let i in outputObj[key]){
-                outputObj[key][i] = outputObj[key][i].replace(/\++/g, " ").replace(/(%20)+/g, " ").replace(/\s+/g, " ");
-            }
-        }
-
-        let outputText = "";
-        Object.keys(outputObj).forEach(k => outputText+= `${k}=[${outputObj[k].join(", ")}]`);
-        console.log(outputText);
+        console.log(output);
     }
 }
 
-solve(['field=value1&field=value2&field=value3']);
+solve([
+    'foo=%20foo&value=+val&foo+=5+%20+203',
+    'foo=poo%20&value=valley&dog=wow+',
+    'url=https://softuni.bg/trainings/coursesinstances/details/1070',
+    'https://softuni.bg/trainings.asp?trainer=nakov&course=oop&course=php'
+]);
