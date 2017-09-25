@@ -4,13 +4,13 @@ let postService = (() => {
         return requester.get('appdata', endpoint, 'kinvey');
     }
     
-    function submitPost(author, title, url, imageUrl, description) {
+    function submitPost(author, description, imageUrl, title, url) {
         let data = {
             author,
-            title,
-            url,
+            description,
             imageUrl,
-            description
+            title,
+            url
         };
         return requester.post('appdata', 'posts', 'kinvey', data)
     }
@@ -31,16 +31,16 @@ let postService = (() => {
         return requester.remove('appdata', `posts/${postId}`, 'kinvey');
     }
 
-    function editPost(postId, author, description, url, imageUrl) {
+    function editPost(_id, author, description, url, title, imageUrl) {
         let data = {
-            postId,
             author,
             description,
             url,
+            title,
             imageUrl
         };
 
-        return requester.update('appdata', `posts/${postId}`, 'kinvey', data);
+        return requester.update('appdata', `posts/${_id}`, 'kinvey', data);
     }
 
     return {

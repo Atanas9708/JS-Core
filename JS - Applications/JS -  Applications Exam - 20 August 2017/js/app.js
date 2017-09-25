@@ -119,10 +119,11 @@ $(() => {
             let imageUrl = ctx.params.image;
             let description = ctx.params.description;
 
-            postService.submitPost(author, title, url, imageUrl, description)
+            console.log(ctx.params);
+
+            postService.submitPost(author, description, imageUrl, title, url)
                 .then(function () {
                     auth.showInfo('Post created!');
-
                     ctx.redirect('#/catalog');
                 })
 
@@ -176,9 +177,10 @@ $(() => {
                     ctx.url = postInfo.url;
                     ctx.imageUrl = postInfo.imageUrl;
                     ctx.description = postInfo.description;
+
                     comments.forEach(c => {
                         c.isAuthor = c.author === sessionStorage.getItem('username');
-                        c.postId = postInfo._id;
+                        c._id = postInfo._id;
                         c.time = calcTime(c._kmd.ect);
                     });
 
@@ -275,7 +277,7 @@ $(() => {
             let isValid = validateCreatePost(url, title);
 
             if (isValid) {
-                postService.editPost(postId, author, description, url, image)
+                postService.editPost(postId, author, description, url, title, image)
                     .then(function () {
                         auth.showError(`Post ${title} updated!`);
                         ctx.redirect('#/catalog');
@@ -347,10 +349,7 @@ $(() => {
                 else return '';
             }
         }
-
-
     });
-
 
     app.run();
 
