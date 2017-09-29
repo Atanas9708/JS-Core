@@ -6,11 +6,11 @@ let commentService = (() => {
         return requester.get('appdata', endpoint, 'kinvey');
     }
     
-    function createComment(postId, content, author) {
+    function createComment(author, content, postId) {
         let data = {
-            postId,
+            author,
             content,
-            author
+            postId
         };
 
         return requester.post('appdata', 'comments', 'kinvey', data);

@@ -180,7 +180,7 @@ $(() => {
 
                     comments.forEach(c => {
                         c.isAuthor = c.author === sessionStorage.getItem('username');
-                        c._id = postInfo._id;
+                        c.postId = postInfo._id;
                         c.time = calcTime(c._kmd.ect);
                     });
 
@@ -205,19 +205,16 @@ $(() => {
             let content = ctx.params.content;
             let author = sessionStorage.getItem('username');
 
-            commentService.createComment(postId, content, author)
+            commentService.createComment(author, content, postId)
                 .then(function () {
                     auth.showError('Comment created.');
                     ctx.redirect(`#/details/:${postId}`);
-                })
-
+                });
         });
 
         this.get('#/deleteComment/:id', function (ctx) {
-            ctx.isLogged = sessionStorage.getItem('username') !== null;
-            ctx.username = sessionStorage.getItem('username');
-
             let commentId = ctx.params.id.substr(1);
+            console.log(ctx.params);
 
             commentService.deleteComment(commentId)
                 .then(function () {
