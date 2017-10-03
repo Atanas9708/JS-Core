@@ -13,6 +13,7 @@ function startApp() {
             }
         });
 
+
         this.get('market.html', displayHome);
         this.get('#/home', displayHome);
 
@@ -58,7 +59,6 @@ function startApp() {
                 }).catch(auth.handleError);
         });
 
-
         this.get('#/register', function (context) {
 
             context.isAnonymous = sessionStorage.getItem('username') === null;
@@ -88,8 +88,9 @@ function startApp() {
                 }).catch(auth.handleError)
         });
 
-
         this.get('#/logout', function (context) {
+            "use strict";
+
             auth.logout()
                 .then(function () {
                     sessionStorage.clear();
@@ -213,7 +214,7 @@ function startApp() {
                                 $('button').click(function () {
                                     let productId = $(this).attr('data-id');
                                     discardProduct(productId);
-                                });
+                                })
                             });
                     })
 
@@ -235,8 +236,8 @@ function startApp() {
                         userData['cart'] = cart;
 
                         marketService.updateUser(userData)
-                            .then(function () {
-                                auth.showInfo('Product discard');
+                            .then(function (userInfo) {
+                                auth.showInfo('Product discarded');
                                 displayCart(context);
                             });
                     });
